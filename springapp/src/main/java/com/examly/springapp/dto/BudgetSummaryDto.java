@@ -16,13 +16,13 @@ public class BudgetSummaryDto {
         this.remainingAmount = remainingAmount;
     }
 
-    // Getters and Setters
-    public String getCategoryName() { return categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
-    public double getAllocatedAmount() { return allocatedAmount; }
-    public void setAllocatedAmount(double allocatedAmount) { this.allocatedAmount = allocatedAmount; }
-    public double getSpentAmount() { return spentAmount; }
-    public void setSpentAmount(double spentAmount) { this.spentAmount = spentAmount; }
-    public double getRemainingAmount() { return remainingAmount; }
-    public void setRemainingAmount(double remainingAmount) { this.remainingAmount = remainingAmount; }
+    // New overloaded constructor
+    public BudgetSummaryDto(String categoryName, double allocatedAmount, double spentAmount) {
+        this.categoryName = categoryName;
+        this.allocatedAmount = allocatedAmount;
+        this.spentAmount = spentAmount;
+        this.remainingAmount = allocatedAmount - spentAmount;
+    }
+
+    // Getters and setters...
 }

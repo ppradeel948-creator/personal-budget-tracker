@@ -1,9 +1,8 @@
 package com.examly.springapp.Entity;
 
 import javax.persistence.*;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Category {
@@ -12,13 +11,16 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Category name is required")
     private String categoryName;
+
+    @Min(value = 0, message = "Allocated amount must be zero or positive")
     private double allocatedAmount;
+
     private String description;
 
     private double spentAmount = 0;
 
-    // Constructors
     public Category() {}
 
     public Category(String categoryName, double allocatedAmount, String description) {

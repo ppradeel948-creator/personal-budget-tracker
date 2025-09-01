@@ -1,39 +1,38 @@
 package com.examly.springapp.service;
 
-import com.examly.springapp.Entity.Category;
-import com.examly.springapp.dto.BudgetSummaryDto;
-import com.examly.springapp.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.examly.springapp.dto.BudgetSummaryDto;
+import com.examly.springapp.model.Category;
+import com.examly.springapp.repository.CategoryRepository;
 @Service
 public class BudgetService {
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    public Category addCategory(Category category) {
-        return categoryRepository.save(category);
-    }
-
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    public List<BudgetSummaryDto> getBudgetSummary() {
-        return categoryRepository.findAll().stream()
-                .map(category -> new BudgetSummaryDto(
-                        category.getCategoryName(),
-                        category.getAllocatedAmount(),
-                        category.getSpentAmount(),
-                        category.getAllocatedAmount() - category.getSpentAmount()))
-                .collect(Collectors.toList());
-    }
-
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
-    }
+  @Autowired
+  CategoryRepository catrepo;
+  public Category addCategory(Category category){
+    return catrepo.save(category);
+  }
+  public List<Category> getAllCategories(){
+    return catrepo.findAll();
+  }
+  public void deleteCategory(Long id){
+    catrepo.deleteById(id);
+  }
+  public List<BudgetSummaryDto> getBudgetSummary() {
+  List<Category> categories = catrepo.findAll();
+  if (categories == null || categories.isEmpty()) {
+    return List.of(); // return an empty list instead of null
+  }
+  return categories.stream()
+      .map(c -> new BudgetSummaryDto(
+          c.getCategoryName(),
+          (double)c.getAllocatedAmount(),
+          0.0
+      ))
+      .collect(Collectors.toList());
+}
 }

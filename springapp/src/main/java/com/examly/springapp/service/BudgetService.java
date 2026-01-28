@@ -1,39 +1,30 @@
 package com.examly.springapp.service;
 
-import com.examly.springapp.Entity.Category;
-import com.examly.springapp.dto.BudgetSummaryDto;
-import com.examly.springapp.repository.CategoryRepository;
+import com.examly.springapp.Entity.Budget;
+import com.examly.springapp.repository.BudgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BudgetService {
-
+    
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    public Category addCategory(Category category) {
-        return categoryRepository.save(category);
+    private BudgetRepository budgetRepository;
+    
+    public Budget createBudget(Budget budget) {
+        return budgetRepository.save(budget);
     }
-
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    
+    public List<Budget> getUserBudgets(Long userId) {
+        return budgetRepository.findByUser_IdAndIsActiveTrue(userId);
     }
-
-    public List<BudgetSummaryDto> getBudgetSummary() {
-        return categoryRepository.findAll().stream()
-                .map(category -> new BudgetSummaryDto(
-                        category.getCategoryName(),
-                        category.getAllocatedAmount(),
-                        category.getSpentAmount(),
-                        category.getAllocatedAmount() - category.getSpentAmount()))
-                .collect(Collectors.toList());
+    
+    public Budget updateBudget(Budget budget) {
+        return budgetRepository.save(budget);
     }
-
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
+    
+    public void deleteBudget(Long id) {
+        budgetRepository.deleteById(id);
     }
 }

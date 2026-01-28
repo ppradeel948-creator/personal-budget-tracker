@@ -1,43 +1,63 @@
 package com.examly.springapp.Entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "categories")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @NotBlank(message = "Category name is required")
+    @Size(max = 100)
     private String categoryName;
 
-    @Min(value = 0, message = "Allocated amount must be zero or positive")
-    private double allocatedAmount;
+    @Enumerated(EnumType.STRING)
+    private CategoryType categoryType;
 
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
 
-    private double spentAmount = 0;
+    @DecimalMin(value = "0.00", message = "Budget limit must be non-negative")
+    @Column(precision = 15, scale = 2)
+    private BigDecimal budgetLimit;
 
-    public Category() {}
+    private Boolean isActive = true;
 
-    public Category(String categoryName, double allocatedAmount, String description) {
-        this.categoryName = categoryName;
-        this.allocatedAmount = allocatedAmount;
-        this.description = description;
-        this.spentAmount = 0;
+    @Column(updatable = false)
+    private LocalDateTime createdDate = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Category> subcategories;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
+
+    public enum CategoryType {
+        INCOME, EXPENSE
     }
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public String getCategoryName() { return categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
-    public double getAllocatedAmount() { return allocatedAmount; }
-    public void setAllocatedAmount(double allocatedAmount) { this.allocatedAmount = allocatedAmount; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public double getSpentAmount() { return spentAmount; }
-    public void setSpentAmount(double spentAmount) { this.spentAmount = spentAmount; }
+    
+    public void setUserId(Long userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(userId);
+    }
 }

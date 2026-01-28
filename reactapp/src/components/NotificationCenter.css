@@ -1,0 +1,151 @@
+.notification-center {
+  position: relative;
+}
+
+.notification-bell {
+  position: relative;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.notification-bell:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.notification-header h3 {
+  color: var(--text-primary);
+  font-family: var(--font-secondary);
+  font-weight: 600;
+}
+
+.mark-all-read {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: var(--font-secondary);
+}
+
+.notifications-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  background: var(--bg-primary);
+}
+
+.notification-item.unread {
+  background: rgba(30, 64, 175, 0.05);
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+  font-family: var(--font-secondary);
+}
+
+.notification-message {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 0.3rem;
+  font-family: var(--font-secondary);
+}
+
+.notification-time {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-family: var(--font-secondary);
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-top: 0.5rem;
+}
+
+.notification-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.view-all {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 500;
+  font-family: var(--font-secondary);
+}
+
+.view-all:hover {
+  text-decoration: underline;
+}

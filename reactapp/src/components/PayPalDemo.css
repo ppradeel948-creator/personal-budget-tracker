@@ -1,0 +1,215 @@
+.paypal-demo {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.paypal-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.paypal-logo {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.paypal-blue {
+  color: #0070ba;
+}
+
+.paypal-light-blue {
+  color: #00a0d1;
+}
+
+.paypal-header h3 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-family: var(--font-secondary);
+}
+
+.paypal-header p {
+  color: var(--text-secondary);
+  font-family: var(--font-secondary);
+}
+
+.paypal-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-secondary);
+}
+
+.feature-icon {
+  font-size: 1.2rem;
+}
+
+.paypal-connect-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #0070ba;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-secondary);
+  margin-bottom: 2rem;
+}
+
+.paypal-connect-btn:hover:not(:disabled) {
+  background: #005ea6;
+  transform: translateY(-2px);
+}
+
+.paypal-connect-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.paypal-connect-btn.connecting {
+  background: #005ea6;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.paypal-transactions {
+  margin-bottom: 2rem;
+}
+
+.paypal-transactions h4 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-family: var(--font-secondary);
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.transaction-item:hover {
+  border-color: #0070ba;
+  transform: translateX(5px);
+}
+
+.transaction-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.transaction-desc {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-secondary);
+}
+
+.transaction-merchant {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: var(--font-secondary);
+}
+
+.transaction-date {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+}
+
+.transaction-amount {
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-family: var(--font-mono);
+}
+
+.transaction-amount.positive {
+  color: var(--secondary);
+}
+
+.transaction-amount.negative {
+  color: var(--accent);
+}
+
+.paypal-security {
+  padding: 1.5rem;
+  background: rgba(0, 112, 186, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 112, 186, 0.2);
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.security-icon {
+  font-size: 1.5rem;
+}
+
+.security-text strong {
+  color: var(--text-primary);
+  font-family: var(--font-secondary);
+}
+
+.security-text p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0.3rem 0 0 0;
+  font-family: var(--font-secondary);
+}
+
+@media (max-width: 768px) {
+  .paypal-demo {
+    padding: 1rem;
+  }
+  
+  .transaction-item {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}

@@ -20,7 +20,11 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 
     @NotNull(message = "Amount is required")
@@ -69,5 +73,13 @@ public class Transaction {
 
     public enum RecurringFrequency {
         DAILY, WEEKLY, MONTHLY, YEARLY
+    }
+    
+    public void setUserId(Long userId) {
+        this.userId = userId;
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setId(userId);
     }
 }

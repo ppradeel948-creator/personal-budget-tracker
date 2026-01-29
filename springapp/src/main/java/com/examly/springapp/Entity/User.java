@@ -59,6 +59,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Budget> budgets;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Category> categories;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Transaction> transactions;
+
     public enum UserRole {
         PRIMARY_USER, FAMILY_MEMBER, FINANCIAL_ADVISOR, DEPENDENT_USER, GUEST
     }

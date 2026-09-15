@@ -20,7 +20,8 @@ import Landing from './pages/Landing';
 import Integration from './pages/Integration';
 
 import './App.css';
-import './styles/modern-theme.css';
+// Import the new Custom Professional theme
+// The theme is already imported via App.css
 
 function App() {
   return (

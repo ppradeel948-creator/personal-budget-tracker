@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,11 +20,9 @@ public class Category {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @NotBlank(message = "Category name is required")
-    @Size(max = 100)
     private String categoryName;
 
     @Enumerated(EnumType.STRING)
@@ -35,7 +32,6 @@ public class Category {
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 
-    @DecimalMin(value = "0.00", message = "Budget limit must be non-negative")
     @Column(precision = 15, scale = 2)
     private BigDecimal budgetLimit;
 
@@ -53,7 +49,7 @@ public class Category {
     public enum CategoryType {
         INCOME, EXPENSE
     }
-    
+
     public void setUserId(Long userId) {
         if (this.user == null) {
             this.user = new User();

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CreateCategory from '../components/CreateCategory';
 import EditBudgetModal from '../components/EditBudgetModal';
+import CreateBudgetModal from '../components/CreateBudgetModal';
 import './Budgets.css';
 
 const Budgets = () => {

@@ -1,45 +1,96 @@
 import React, { useState } from 'react';
-import './AddTransactionModal.css';
+import './Modal.css';
 
-const AddTransactionModal = ({ onClose, onSave }) => {
+const AddTransactionModal = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
+    date: new Date().toISOString().split('T')[0],
     description: '',
-    amount: '',
     category: '',
-    type: 'expense',
-    date: new Date().toISOString().split('T')[0]
+    amount: '',
+    type: 'expense'
   });
 
-  const categories = JSON.parse(localStorage.getItem('categories') || '[]');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.description && formData.amount && formData.category) {
-      const transaction = {
-        id: Date.now(),
-        ...formData,
-        amount: parseFloat(formData.amount)
-      };
-      onSave(transaction);
-    }
+  const categories = {
+    expense: ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Health', 'Education', 'Shopping', 'Other'],
+    income: ['Salary', 'Freelance', 'Business', 'Investment', 'Gift', 'Other']
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'type' && { category: '' })
+    }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const transaction = {
+      ...formData,
+      id: Date.now(),
+      amount: formData.type === 'expense' ? -Math.abs(parseFloat(formData.amount)) : Math.abs(parseFloat(formData.amount))
+    };
+    onSave(transaction);
+    setFormData({
+      date: new Date().toISOString().split('T')[0],
+      description: '',
+      category: '',
+      amount: '',
+      type: 'expense'
+    });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className="modal-overlay">
-      <div className="add-transaction-modal">
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content custom-card" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Add New Transaction</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <h2 className="text-gradient">Add New Transaction</h2>
+          <button className="modal-close" onClick={onClose}>&times;</button>
         </div>
 
-        <form onSubmit={handleSubmit} className="transaction-form">
+        <form onSubmit={handleSubmit} className="modal-form">
+          <div className="form-group">
+            <label>Transaction Type</label>
+            <div className="radio-group">
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name="type"
+                  value="expense"
+                  checked={formData.type === 'expense'}
+                  onChange={handleChange}
+                />
+                <span>Expense</span>
+              </label>
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  name="type"
+                  value="income"
+                  checked={formData.type === 'income'}
+                  onChange={handleChange}
+                />
+                <span>Income</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Date</label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="input-custom"
+              required
+            />
+          </div>
+
           <div className="form-group">
             <label>Description</label>
             <input
@@ -47,78 +98,48 @@ const AddTransactionModal = ({ onClose, onSave }) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
+              className="input-custom"
               placeholder="Enter transaction description"
               required
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Amount</label>
-              <input
-                type="number"
-                name="amount"
-                value={formData.amount}
-                onChange={handleChange}
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Type</label>
-              <select name="type" value={formData.type} onChange={handleChange}>
-                <option value="expense">Expense</option>
-                <option value="income">Income</option>
-              </select>
-            </div>
+          <div className="form-group">
+            <label>Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="input-custom"
+              required
+            >
+              <option value="">Select a category</option>
+              {categories[formData.type].map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} required>
-                <option value="">Select Category</option>
-                {categories
-                  .filter(cat => cat.type === formData.type)
-                  .map(category => (
-                    <option key={category.id} value={category.name}>
-                      {category.icon} {category.name}
-                    </option>
-                  ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Date</label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label>Amount ($)</label>
+            <input
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              className="input-custom"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              required
+            />
           </div>
 
-          <div className="transaction-preview">
-            <h4>Transaction Preview</h4>
-            <div className="preview-item">
-              <span className={`amount ${formData.type}`}>
-                {formData.type === 'income' ? '+' : '-'}${formData.amount || '0.00'}
-              </span>
-              <span className="description">{formData.description || 'Transaction description'}</span>
-              <span className="category">{formData.category || 'Category'}</span>
-            </div>
-          </div>
-
-          <div className="form-actions">
-            <button type="button" className="btn-cancel" onClick={onClose}>
+          <div className="modal-actions">
+            <button type="button" className="btn-custom btn-outline" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit" className="btn-save">
+            <button type="submit" className="btn-custom btn-secondary">
               Add Transaction
             </button>
           </div>

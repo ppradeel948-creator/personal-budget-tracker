@@ -22,38 +22,38 @@ import com.examly.springapp.service.BudgetService;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-  @Autowired
-  private BudgetService service;
+    @Autowired
+    private BudgetService service;
 
-  @PostMapping
-  public Category addCategory(@RequestBody Category category) {
-    return service.addCategory(category);
-  }
+    @PostMapping
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+        return ResponseEntity.ok(service.addCategory(category));
+    }
 
-  @GetMapping
-  public List<Category> fetchAllCategory() {
-    return service.getAllCategories();
-  }
+    @GetMapping
+    public ResponseEntity<List<Category>> fetchAllCategory() {
+        return ResponseEntity.ok(service.getAllCategories());
+    }
 
-  @GetMapping("/summary")
-  public List<BudgetSummaryDto> fetchAllBudgetSummary() {
-    return service.getBudgetSummary();
-  }
+    @GetMapping("/summary")
+    public ResponseEntity<List<BudgetSummaryDto>> fetchAllBudgetSummary() {
+        return ResponseEntity.ok(service.getBudgetSummary());
+    }
 
-  @DeleteMapping("/{id}")
-  public String deleteCategory(@PathVariable Long id) {
-    service.deleteCategory(id);
-    return "Deleted successfully"; 
-  }
-  @DeleteMapping("/api/categories")
-  public ResponseEntity<Void> deleteWithoutId() {
-  return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
-  }
-  @GetMapping("/authentication")
-  public String loginVerify(Authentication authentication){
-  String username=authentication.getName();
-  return "welcome to "+username+" to SKCET";
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+        service.deleteCategory(id);
+        return ResponseEntity.ok("Deleted successfully");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteWithoutId() {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+    }
+
+    @GetMapping("/authentication")
+    public String loginVerify(Authentication authentication) {
+        String username = authentication.getName();
+        return "welcome to " + username + " to SKCET";
+    }
 }
-
-}
-

@@ -1,18 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CreateCategory from '../components/CreateCategory';
+import CreateBudgetModal from '../components/CreateBudgetModal';
 import AddTransactionModal from '../components/AddTransactionModal';
+import ViewReportsModal from '../components/ViewReportsModal';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showAddTransaction, setShowAddTransaction] = useState(false);
   const [showCreateBudget, setShowCreateBudget] = useState(false);
+  const [showReports, setShowReports] = useState(false);
+  
+  const [transactions, setTransactions] = useState([
+    { id: 1, date: '2024-01-15', description: 'Salary Deposit', category: 'Income', amount: 5000, type: 'income' },
+    { id: 2, date: '2024-01-14', description: 'Grocery Shopping', category: 'Food', amount: -125.50, type: 'expense' },
+    { id: 3, date: '2024-01-13', description: 'Netflix Subscription', category: 'Entertainment', amount: -15.99, type: 'expense' },
+    { id: 4, date: '2024-01-12', description: 'Freelance Payment', category: 'Income', amount: 800, type: 'income' },
+    { id: 5, date: '2024-01-11', description: 'Gas Station', category: 'Transportation', amount: -45.00, type: 'expense' }
+  ]);
+
   const stats = [
-    { title: 'Total Balance', amount: '$12,450.00', change: '+5.2%', positive: true },
-    { title: 'Monthly Income', amount: '$8,500.00', change: '+12%', positive: true },
-    { title: 'Monthly Expenses', amount: '$3,250.00', change: '-8%', positive: true },
-    { title: 'Savings Goal', amount: '$5,000.00', progress: 78, positive: true }
+    { title: 'Total Balance', amount: '$12,450.00', change: '+5.2%', positive: true, icon: '💰' },
+    { title: 'Monthly Income', amount: '$8,500.00', change: '+12%', positive: true, icon: '📈' },
+    { title: 'Monthly Expenses', amount: '$3,250.00', change: '-8%', positive: true, icon: '💸' },
+    { title: 'Savings Goal', amount: '$5,000.00', progress: 78, positive: true, icon: '🎯' }
   ];
 
   const recentTransactions = [
@@ -24,24 +35,29 @@ const Dashboard = () => {
   ];
 
   const budgetCategories = [
-    { name: 'Food & Dining', spent: 450, budget: 600, color: '#8b5cf6' },
-    { name: 'Transportation', spent: 280, budget: 400, color: '#06b6d4' },
+    { name: 'Food & Dining', spent: 450, budget: 600, color: '#10b981' },
+    { name: 'Transportation', spent: 280, budget: 400, color: '#3b82f6' },
     { name: 'Entertainment', spent: 150, budget: 200, color: '#f59e0b' },
-    { name: 'Shopping', spent: 320, budget: 300, color: '#ec4899' }
+    { name: 'Shopping', spent: 320, budget: 300, color: '#8b5cf6' }
   ];
+
+  const handleSaveTransaction = (transaction) => {
+    setTransactions([transaction, ...transactions]);
+  };
 
   return (
     <div className="dashboard">
       <div className="container">
         <div className="dashboard-header">
-          <h1 className="holo-text">Financial Dashboard</h1>
+          <h1 className="heading-primary">Financial Dashboard</h1>
           <p>Welcome back! Here's your financial overview</p>
         </div>
 
         {/* Stats Grid */}
         <div className="stats-grid">
           {stats.map((stat, index) => (
-            <div key={index} className="glass-card stat-card fade-in">
+            <div key={index} className="custom-card stat-card animate-fadeInUp">
+              <div className="stat-icon">{stat.icon}</div>
               <div className="stat-header">
                 <h3>{stat.title}</h3>
                 {stat.change && (
@@ -53,8 +69,8 @@ const Dashboard = () => {
               <div className="stat-amount">{stat.amount}</div>
               {stat.progress && (
                 <div className="progress-container">
-                  <div className="cyber-progress">
-                    <div className="cyber-progress-fill" style={{width: `${stat.progress}%`}}></div>
+                  <div className="progress-custom">
+                    <div className="progress-fill" style={{width: `${stat.progress}%`}}></div>
                   </div>
                   <span className="progress-text">{stat.progress}% Complete</span>
                 </div>
@@ -65,8 +81,16 @@ const Dashboard = () => {
 
         <div className="dashboard-content">
           {/* Recent Transactions */}
-          <div className="glass-card transactions-card">
-            <h2 className="gradient-text">Recent Transactions</h2>
+          <div className="custom-card transactions-card">
+            <div className="card-header">
+              <h2 className="text-gradient">Recent Transactions</h2>
+              <button 
+                className="btn-custom btn-outline"
+                onClick={() => navigate('/transactions')}
+              >
+                View All
+              </button>
+            </div>
             <div className="transactions-list">
               {recentTransactions.map(transaction => (
                 <div key={transaction.id} className="transaction-item">
@@ -83,8 +107,16 @@ const Dashboard = () => {
           </div>
 
           {/* Budget Overview */}
-          <div className="glass-card budget-card">
-            <h2 className="gradient-text">Budget Overview</h2>
+          <div className="custom-card budget-card">
+            <div className="card-header">
+              <h2 className="text-gradient">Budget Overview</h2>
+              <button 
+                className="btn-custom btn-outline"
+                onClick={() => navigate('/budgets')}
+              >
+                Manage
+              </button>
+            </div>
             <div className="budget-list">
               {budgetCategories.map((category, index) => (
                 <div key={index} className="budget-item">
@@ -94,15 +126,18 @@ const Dashboard = () => {
                       ${category.spent} / ${category.budget}
                     </span>
                   </div>
-                  <div className="cyber-progress">
+                  <div className="progress-custom">
                     <div 
-                      className="cyber-progress-fill" 
+                      className="progress-fill" 
                       style={{
                         width: `${(category.spent / category.budget) * 100}%`,
-                        background: `linear-gradient(90deg, ${category.color}, ${category.color}aa)`
+                        background: category.color
                       }}
                     ></div>
                   </div>
+                  <span className="budget-percentage">
+                    {Math.round((category.spent / category.budget) * 100)}% used
+                  </span>
                 </div>
               ))}
             </div>
@@ -111,66 +146,64 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="quick-actions">
-          <button 
-            className="neon-btn"
-            onClick={() => setShowAddTransaction(true)}
-          >
-            Add Transaction
-          </button>
-          <button 
-            className="neon-btn"
-            onClick={() => setShowCreateBudget(true)}
-          >
-            Create Budget
-          </button>
-          <button 
-            className="neon-btn"
-            onClick={() => navigate('/reports')}
-          >
-            View Reports
-          </button>
+          <h3>Quick Actions</h3>
+          <div className="actions-grid">
+            <button 
+              className="action-card"
+              onClick={() => setShowAddTransaction(true)}
+            >
+              <span className="action-icon">💳</span>
+              <span className="action-title">Add Transaction</span>
+              <span className="action-desc">Record income or expense</span>
+            </button>
+            <button 
+              className="action-card"
+              onClick={() => setShowCreateBudget(true)}
+            >
+              <span className="action-icon">🎯</span>
+              <span className="action-title">Create Budget</span>
+              <span className="action-desc">Set spending limits</span>
+            </button>
+            <button 
+              className="action-card"
+              onClick={() => setShowReports(true)}
+            >
+              <span className="action-icon">📄</span>
+              <span className="action-title">View Reports</span>
+              <span className="action-desc">Analyze your finances</span>
+            </button>
+            <button 
+              className="action-card"
+              onClick={() => navigate('/analytics')}
+            >
+              <span className="action-icon">📊</span>
+              <span className="action-title">Analytics</span>
+              <span className="action-desc">Track spending trends</span>
+            </button>
+          </div>
         </div>
 
-        {/* Add Transaction Modal */}
-        {showAddTransaction && (
-          <AddTransactionModal
-            onClose={() => setShowAddTransaction(false)}
-            onSave={(transaction) => {
-              // Save transaction to localStorage
-              const existingTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-              const newTransactions = [transaction, ...existingTransactions];
-              localStorage.setItem('transactions', JSON.stringify(newTransactions));
-              
-              // Update category spending
-              const categories = JSON.parse(localStorage.getItem('categories') || '[]');
-              const updatedCategories = categories.map(cat => {
-                if (cat.name === transaction.category) {
-                  return {
-                    ...cat,
-                    spent: cat.spent + (transaction.type === 'expense' ? transaction.amount : -transaction.amount),
-                    count: cat.count + 1
-                  };
-                }
-                return cat;
-              });
-              localStorage.setItem('categories', JSON.stringify(updatedCategories));
-              
-              console.log('Transaction saved:', transaction);
-              setShowAddTransaction(false);
-            }}
-          />
-        )}
+        {/* Modals */}
+        <AddTransactionModal
+          isOpen={showAddTransaction}
+          onClose={() => setShowAddTransaction(false)}
+          onSave={handleSaveTransaction}
+        />
 
-        {/* Create Budget Modal */}
-        {showCreateBudget && (
-          <CreateCategory
-            onClose={() => setShowCreateBudget(false)}
-            onSave={(category) => {
-              console.log('Budget category created:', category);
-              setShowCreateBudget(false);
-            }}
-          />
-        )}
+        <CreateBudgetModal
+          isOpen={showCreateBudget}
+          onClose={() => setShowCreateBudget(false)}
+          onSave={(budget) => {
+            console.log('Budget created:', budget);
+            setShowCreateBudget(false);
+          }}
+        />
+
+        <ViewReportsModal
+          isOpen={showReports}
+          onClose={() => setShowReports(false)}
+          transactions={transactions}
+        />
       </div>
     </div>
   );
